@@ -102,7 +102,7 @@ Quality/
 
 ## ⚙️ Workflow Steps
 
-<img height="840" alt="quality" src="" />
+<img height="840" alt="quality" src="https://github.com/user-attachments/assets/ccd4723f-38ac-4c25-8f4b-5296cd661e9e" />
 
 
 ---
