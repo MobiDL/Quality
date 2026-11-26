@@ -2,7 +2,7 @@ version 1.0
 
 import "modules/sambamba.wdl" as runSambamba
 import "modules/GATK4.wdl" as runGatk
-import "modules/utilities.wdl" as runUtilities
+import "modules/bedtools.wdl" as runBedtools
 import "modules/identito.wdl" as runIdentito
 import "modules/covreport2.wdl" as runCovReport
 
@@ -133,7 +133,7 @@ workflow Quality {
             bam = bam
     }
 
-    call runUtilities.computePoorCoverage {
+    call runBedtools.computePoorCoverage {
         input:
             threads = cpuLow,
             memory = memoryHigh,
@@ -144,7 +144,7 @@ workflow Quality {
             GenomecovFile = computeGenomecov.genomecovFile
     }
 
-    call runUtilities.samtoolsBedCov {
+    call runBedtools.samtoolsBedCov {
         input:
             threads = cpuLow,
             memory = memoryHigh,
@@ -156,7 +156,7 @@ workflow Quality {
             minCovBamQual = minCovBamQual
     }
 
-    call runUtilities.computeCoverage {
+    call runBedtools.computeCoverage {
         input:
             threads = cpuLow,
             memory = memoryHigh,
@@ -165,7 +165,7 @@ workflow Quality {
             BedCovFile = samtoolsBedCov.BedCovFile
     }
 
-    call runUtilities.computeCoverageClamms {
+    call runBedtools.computeCoverageClamms {
         input:
             threads = cpuLow,
             memory = memoryHigh,
