@@ -33,8 +33,8 @@ workflow Quality {
         File refFai = refFasta + ".fai"
         File refDict
 
-        File intervalTargetFile
-        File intervalBaitBed = intervalTargetFile  # Default to 'targetBed'
+        File targetBed
+        File baitBed = targetBed  # Default to 'targetBed'
 
         ## computePoorCoverage
         Int bedtoolsLowCoverage = 20
@@ -96,7 +96,7 @@ workflow Quality {
             name = sample,
             outputPath = outDir,
             refDict = refDict,
-            intervalTargetFile = intervalTargetFile
+            bed = targetBed
     }
     call runGatk.bedToPicardIntervalList as bedToPicardIntervalListBait {
         input:
@@ -106,7 +106,7 @@ workflow Quality {
             outPath = outDir,
             bait = true,
             refDict = refDict,
-            intervalTargetFile = intervalBaitBedFile
+            bed = baitBed
     }
 
     call runGatk.collectHsMetrics {
@@ -132,8 +132,8 @@ workflow Quality {
             name = sample,
             outputPath = outDir,
             genomeVersion = genomeVersion,
-            IntervalBedFile = intervalTargetFile,
-            BedtoolsLowCoverage = bedtoolsLowCoverage,
+            IntervalBedFile = targetBed,
+            bedtoolsLowCoverage = bedtoolsLowCoverage,
             bamIndex = bamIndex,
             bam = bam
     }
@@ -146,7 +146,7 @@ workflow Quality {
             name = sample,
             outputPath = outDir,
             genomeVersion = genomeVersion,
-            BedToolsSmallInterval = bedToolsSmallInterval,
+            bedToolsSmallInterval = bedToolsSmallInterval,
             GenomecovFile = computeGenomecov.genomecovFile
     }
 
@@ -157,10 +157,10 @@ workflow Quality {
             memory = memoryHigh,
             name = sample,
             outputPath = outDir,
-            IntervalBedFile = intervalTargetFile,
+            IntervalBedFile = targetBed,
             bam = bam,
             bamIndex = bamIndex,
-            MinCovBamQual = minCovBamQual
+            minCovBamQual = minCovBamQual
     }
 
     call runUtilities.computeCoverage {
