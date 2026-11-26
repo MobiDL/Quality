@@ -28,6 +28,7 @@ workflow Quality {
         ## Global
         String sample
         File bamFile
+        File bamIndex
         String outDir
 
         File refFasta
@@ -40,26 +41,26 @@ workflow Quality {
         ## computePoorCoverage
         Int bedtoolsLowCoverage = 20
         Int bedToolsSmallInterval = 20
+        String genomeVersion = "hg38"
 
         ## computeCoverage
-        Int minCovBamQual
+        Int minCovBamQual = 30
 
         ## Identito (default = SNPXplex. rsIDs order here will be maintained)
         String idList = "rs11702450,rs843345,rs1058018,rs8017,rs3738494,rs1065483,rs2839181,rs11059924,rs2075144,rs6795772,rs456261,rs1131620,rs2231926,rs352169,rs3739160"
 
         ## covreport
         String covReportDir
-        String covReportJar
         File geneFile
     }
 
     call runSambamba.flagstat {
         input:
             Queue = defQueue,
-            Cpu = cpuHigh,
-            Memory = memoryLow,
+            threads = cpuHigh,
+            memory = memoryLow,
             name = sample,
-            OutDir = outDir,
+            outputPath = outDir,
             bamIndex = bamIndex,
             bam = bam
             
@@ -68,11 +69,11 @@ workflow Quality {
     call runGatk.collectMultipleMetrics {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
-            RefFasta = refFasta,
+            outputPath = outDir,
+            refFasta = refFasta,
             bamIndex = bamIndex,
             bam = bam
     }
@@ -80,23 +81,38 @@ workflow Quality {
     call runGatk.collectInsertSizeMetrics {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
-            RefFasta = refFasta,
+            outputPath = outDir,
+            refFasta = refFasta,
             bamIndex = bamIndex,
             bam = bam
+    }
+
+    call runGatk.collectHsMetrics {
+        input:
+            Queue = defQueue,
+            threads = cpuLow,
+            memory = memoryHigh,
+            name = sample,
+            outputPath = outDir,
+            refFasta = refFasta,
+            refFai = refFai,
+            bamIndex = bamIndex,
+            bam = bam,
+            BaitIntervals = bedToPicardIntervalListBait.picardIntervals,
+            TargetIntervals = bedToPicardIntervalListTarget.picardIntervals
     }
 
     call runComputeUtilities.computeGenomecov {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
-            GenomeVersion = genomeVersion,
+            outputPath = outDir,
+            genomeVersion = genomeVersion,
             IntervalBedFile = intervalBedFile,
             BedtoolsLowCoverage = bedtoolsLowCoverage,
             bamIndex = bamIndex,
@@ -106,11 +122,11 @@ workflow Quality {
     call runUtilities.computePoorCoverage {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
-            GenomeVersion = genomeVersion,
+            outputPath = outDir,
+            genomeVersion = genomeVersion,
             BedToolsSmallInterval = bedToolsSmallInterval,
             GenomecovFile = computeGenomecov.genomecovFile
     }
@@ -118,10 +134,10 @@ workflow Quality {
     call runUtilities.samtoolsBedCov {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
+            outputPath = outDir,
             IntervalBedFile = intervalBedFile,
             bam = bam,
             bamIndex = bamIndex,
@@ -131,50 +147,34 @@ workflow Quality {
     call runUtilities.computeCoverage {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
+            outputPath = outDir,
             BedCovFile = samtoolsBedCov.BedCovFile
     }
 
     call runUtilities.computeCoverageClamms {
         input:
             Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
+            threads = cpuLow,
+            memory = memoryHigh,
             name = sample,
-            OutDir = outDir,
+            outputPath = outDir,
             BedCovFile = samtoolsBedCov.BedCovFile
-    }
-
-    call runGatk.collectHsMetrics {
-        input:
-            Queue = defQueue,
-            Cpu = cpuLow,
-            Memory = memoryHigh,
-            name = sample,
-            OutDir = outDir,
-            RefFasta = refFasta,
-            RefFai = refFai,
-            bamIndex = bamIndex,
-            bam = bam,
-            BaitIntervals = gatkBedToPicardIntervalListBait.picardIntervals,
-            TargetIntervals = gatkBedToPicardIntervalListTarget.picardIntervals
     }
 
     call runCovReport.covReport as covreport {
         input:
-            Cpu = cpuLow,
-            Memory = memoryLow,
+            threads = cpuLow,
+            memory = memoryLow,
             name = sample,
-            OutDir = outDir,
-            CovReportDir = covReportDir,
-            CovReportJar = covReportJar,
+            outputPath = outDir,
+            covReportDir = covReportDir,
             bam = bam,
             bamIndex = bamIndex,
-            GenomeVersion = genomeVersion,
-            GeneFile = geneFile
+            genomeVersion = genomeVersion,
+            geneFile = geneFile
     }
 
     output {
