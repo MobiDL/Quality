@@ -1,9 +1,9 @@
 {
-  "Quality.sample": "toto",
-  "Quality.bam": "https://github.com/MobiDL/tests_dataset/raw/refs/heads/main/smallest/bam/sample.bam",
-  "Quality.bamIndex": "https://github.com/MobiDL/tests_dataset/raw/refs/heads/main/smallest/bam/sample.bam.bai",
-  "Quality.outDir": "String <REQUIRED>",
-  "Quality.refFasta": "https://github.com/MobiDL/tests_dataset/raw/refs/heads/main/smallest/fasta/chr.fasta",
-  "Quality.refDict": "https://github.com/MobiDL/tests_dataset/raw/refs/heads/main/smallest/fasta/chr.dict",
-  "Quality.targetBed": "https://github.com/MobiDL/tests_dataset/raw/refs/heads/main/smallest/bed/test.bed"
+  "Quality.sample": "smalltest",
+  "Quality.bam": "REPLACE/smallest/bam/sample.bam",
+  "Quality.bamIndex": "REPLACE/smallest/bam/sample.bam.bai",
+  "Quality.outDir": "/path/to/anotherDir/",
+  "Quality.refFasta": "REPLACE/smallest/fasta/chr.fasta",
+  "Quality.refDict": "REPLACE/smallest/fasta/chr.dict",
+  "Quality.targetBed": "REPLACE/smallest/bed/test.bed"
 }
