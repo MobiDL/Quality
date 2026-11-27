@@ -18,6 +18,10 @@ pytest \
 	tests/
 ```
 
-WARN: Above '/path/to/anotherDir/' for '--basetemp' must be declared as outDir in tests/jsons/smalltest_inputs.json
+WARN: For test to work, replace in `tests/jsons/smalltest_inputs.json`:
+
+* '/path/to/anotherDir/' by '--basetemp' you provied above
+* `REPLACE` by "/path/to/tests_dataset" cloned repo
+
 
 Due to `--keep-workflow-wd` option, dirs `Name_of_my_test` present at `--basetemp` path (created by `pytest-workflow`) must be be deleted *manually* afterwards
