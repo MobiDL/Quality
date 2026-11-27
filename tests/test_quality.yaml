@@ -1,0 +1,12 @@
+## WARNING: md5 of EMPTY file = d41d8cd98f00b204e9800998ecf8427e
+
+
+- name: Quality smalltest
+  # Overall runtime : XXX min
+  tags:
+    - wf_level
+    - smalltest
+  command: nohup bash -c "source tests/func_special.sh && run_wdl Quality.wdl tests/jsons/smalltest_inputs.json"
+  stdout:
+    contains:
+      - "workflow finished with status 'Succeeded'"
