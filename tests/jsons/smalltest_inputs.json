@@ -1,0 +1,9 @@
+{
+  "Quality.sample": "smalltest",
+  "Quality.bam": "REPLACE/smallest/bam/sample.bam",
+  "Quality.bamIndex": "REPLACE/smallest/bam/sample.bam.bai",
+  "Quality.outDir": "/path/to/anotherDir/",
+  "Quality.refFasta": "REPLACE/smallest/fasta/chr.fasta",
+  "Quality.refDict": "REPLACE/smallest/fasta/chr.dict",
+  "Quality.targetBed": "REPLACE/smallest/bed/test.bed"
+}
